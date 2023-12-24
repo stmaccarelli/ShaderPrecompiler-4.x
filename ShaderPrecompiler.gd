@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-export var numFrames: int = 5  # The number of frames to display all materials
+@export var numFrames: int = 5  # The number of frames to display all materials
 
 signal allShadersCompiled  # This signal is emitted when the node frees itself (i.e., all materials are compiled)
 
@@ -24,14 +24,14 @@ func _process(_delta: float) -> void:
 
 func _recursive_get_materials(node: Node) -> void:
 	for child in node.get_children():
-		if child is CSGPrimitive:
+		if child is CSGPrimitive3D:
 			if is_instance_valid(child.material):
 				var mat = child.material
 				_add_material(mat)
 				_foundMaterials.append(mat)
 		
-		if child is MeshInstance:
-			var mesh: MeshInstance = child as MeshInstance
+		if child is MeshInstance3D:
+			var mesh: MeshInstance3D = child as MeshInstance3D
 			
 			for i in range(mesh.get_surface_material_count()):
 				var mat = mesh.get_surface_material(i)
@@ -48,7 +48,7 @@ func _recursive_get_materials(node: Node) -> void:
 
 func _add_material(material: Material) -> void:
 	var quad: QuadMesh = QuadMesh.new()
-	var newMesh: MeshInstance = MeshInstance.new()
+	var newMesh: MeshInstance3D = MeshInstance3D.new()
 	newMesh.mesh = quad
 	newMesh.set_surface_material(0, material)
 	
@@ -62,8 +62,8 @@ func _add_material(material: Material) -> void:
 
 func _rotate_children() -> void:
 	for child in get_children():
-		if child is MeshInstance:
-			var mesh: MeshInstance = child as MeshInstance
+		if child is MeshInstance3D:
+			var mesh: MeshInstance3D = child as MeshInstance3D
 			mesh.rotate_x(randf() * 0.2)
 			mesh.rotate_y(randf() * -0.3)
 			mesh.rotate_z(randf() * 0.1)
